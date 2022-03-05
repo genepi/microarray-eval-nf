@@ -1,0 +1,30 @@
+# You can use this file to create a conda environment for this pipeline:
+#   conda env create -f environment.yml
+name: chip-simulation
+channels:
+  - defaults
+  - bioconda
+  - conda-forge
+dependencies:
+  - bcftools=1.10.2
+  - vcftools=0.1.16
+  - htslib=1.10.2
+  - plink=1.90b6.21
+  - plink2=2.00a2.3
+  - java-jdk=8.0.112
+  - unzip=6.0
+  - r-base=4.0.3
+  - r-rmarkdown=2.7
+  - r-ggplot2=3.3.3
+  - r-dplyr=1.0.2
+  - r-dt=0.18
+  - r-htmltools=0.5.0
+  - r-rmdformats=1.0.2
+  - pandoc=2.12
+  - cairo=1.16.0
+  - xorg-libxt=1.2.0
+  - fonts-anaconda=1
+  - cyvcf2=0.30.4
+  - numpy=1.19.2
+  - pandas=1.2.4
+  - samtools=1.10
