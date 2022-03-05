@@ -14,6 +14,8 @@ workflow MICROARRAY_EVAL {
 
   SIMULATE_ARRAY ( array_seq_combined )
 
+  SIMULATE_ARRAY.out.sim_out.groupTuple().view()
+
 }
 
 // extract string or numbe after "chr"
