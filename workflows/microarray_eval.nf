@@ -1,5 +1,24 @@
 
 
+requiredParams = [
+    'project', 'sequence_data',
+    'strand_data', 'imputation_host',
+    'imputation_token', 'imputation_panel',
+    'imputation_population', 'imputation_build'
+]
+
+for (param in requiredParams) {
+    if (params[param] == null) {
+      exit 1, "Parameter ${param} is required."
+    }
+}
+
+if(params.outdir == null) {
+  outdir = "output/${params.project}"
+} else {
+  outdir = params.outdir
+}
+
 if (!params.imputation_token) {
    exit 1, "[Pipeline error] Parameter 'token' is not set in the pipeline!\n"
 }
@@ -8,11 +27,11 @@ if (!params.imputation_token) {
 include { SIMULATE_ARRAY } from '../modules/local/simulate_array'
 include { IMPUTE_ARRAY } from '../modules/local/impute_array'
 include { CALC_IMPUTATION_ACCURACY } from '../modules/local/calc_imputation_accuracy'
-include { PREPARE_RSQ_BROWSER_DATA } from '../modules/local/prepare_rsq_browser_data'
+include { PREPARE_RSQ_BROWSER_DATA } from '../modules/local/prepare_rsq_browser_data' addParams(outdir: "$outdir")
 
 workflow MICROARRAY_EVAL {
 
-  strand_data    =  channel.fromPath("${params.strand_data}/*strand", checkIfExists: true)
+  strand_data    = channel.fromPath("${params.strand_data}/*strand", checkIfExists: true)
   sequence_data =  channel.fromPath("${params.sequence_data}/*vcf.gz", checkIfExists: true)
 
 
