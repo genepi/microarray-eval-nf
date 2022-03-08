@@ -1,6 +1,6 @@
 process SIMULATE_ARRAY {
 
-publishDir "${params.outdir}", mode: 'copy'
+//publishDir "${params.outdir}", mode: 'copy'
 
     input:
     tuple val(chr), path(strand_data), path(sequence_data)
@@ -23,7 +23,7 @@ publishDir "${params.outdir}", mode: 'copy'
 
     sort -k1b,1 -k2n,2 -o $tab_file $tab_file
 
-    tabix !{sequence_data}
+    tabix -f !{sequence_data}
     bcftools view -T $tab_file !{sequence_data} | bgzip -c > tmp.vcf.gz
     bcftools annotate tmp.vcf.gz --remove FILTER | bgzip -c > $sim_file
     tabix $sim_file
