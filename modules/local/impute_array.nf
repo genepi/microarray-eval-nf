@@ -7,6 +7,7 @@ process IMPUTE_ARRAY {
 
     output:
     tuple val(array_name), path("*.dose.vcf.gz"), path(seq_file), val(chr), emit: imputed_data
+    val(chr), emit: test
 
     shell:
     '''
