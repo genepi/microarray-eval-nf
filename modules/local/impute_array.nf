@@ -6,7 +6,7 @@ process IMPUTE_ARRAY {
     tuple val(array_name), path(simulated_arrays), val(chr), path(seq_file)
 
     output:
-    tuple val(array_name), path("*.dose.vcf.gz"), path(seq_file), val(chr), emit: imputed_data
+    tuple val(array_name), path("job-*/local/*.dose.vcf.gz"), path(seq_file), val(chr), emit: imputed_data
     val(chr), emit: test
 
     shell:
@@ -15,7 +15,5 @@ process IMPUTE_ARRAY {
 
     imputationbot add-instance !{params.imputation_host} !{params.imputation_token}
     imputationbot impute --files !{simulated_arrays} --refpanel !{params.imputation_panel} --build !{params.imputation_build} --autoDownload --password ${pwd} --population !{params.imputation_population}
-
-    cp job-*/local/*.dose.vcf.gz .
     '''
 }
