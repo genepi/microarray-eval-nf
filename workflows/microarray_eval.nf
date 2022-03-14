@@ -48,23 +48,23 @@ workflow MICROARRAY_EVAL {
 
   IMPUTE_ARRAY ( SIMULATE_ARRAY.out.array_data.groupTuple() )
 
-
-if(false) {
   // impute gets as an input both array files + sequence files. This method combines the correct results
   r2_input_data = IMPUTE_ARRAY.out.imputed_data
     .flatMap { chipname, dose_list, sequencefile_list, chromosome_list ->
             def result = []
-          //  println(sequencefile_list)
-            for (i = 0; i < chromosome_list.size(); i++) {
-                result << [ chipname, dose_list.find {e -> /* find matching dose file for current data row */
-                                e.endsWith("chr" + chromosome_list[i] + ".dose.vcf.gz")
+            if(chromosome_list.size() == 1) {
+              result << [ chipname, dose_list, sequencefile_list, chromosome_list ]
+              return result
+            } else {
+                for (i = 0; i < chromosome_list.size(); i++) {
+                result << [ chipname, dose_list.find
+                            {e -> /* find matching dose file for current data row */
+                             e.endsWith("chr" + chromosome_list[i] + ".dose.vcf.gz")
                             }, sequencefile_list[i], chromosome_list[i] ]
-            }
-            return result /* result list is emitted per entry (data row) */
+                }
+            return result
+          }
     }
-  } else {
-    r2_input_data = IMPUTE_ARRAY.out.imputed_data
-  }
 
    CALCULATE_IMPUTATION_ACCURACY ( r2_input_data )
 
