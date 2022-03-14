@@ -1,18 +1,27 @@
-FROM continuumio/miniconda3:4.9.2
-
-
-#RUN apt-get update && apt-get install -y \
-#  libopenblas-dev \
-#  && rm -rf /var/lib/apt/lists/*
-
+FROM ubuntu:18.04
 COPY environment.yml .
-RUN conda env update -n root -f environment.yml && conda clean -a
+
+#  Install miniconda
+RUN  apt-get update && apt-get install -y wget
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
+  /bin/bash ~/miniconda.sh -b -p /opt/conda
+ENV PATH=/opt/conda/bin:${PATH}
+
+RUN conda update -y conda
+RUN conda env update -n root -f environment.yml
+
+# Install software
+RUN apt-get update && \
+    apt-get install -y procps
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install jbang (not as conda package available)
 WORKDIR "/opt"
-RUN wget https://github.com/jbangdev/jbang/releases/download/v0.59.0/jbang.zip && \
-    unzip -q jbang.zip && \
-    rm jbang.zip
+RUN wget https://github.com/jbangdev/jbang/releases/download/v0.91.0/jbang-0.91.0.zip && \
+    unzip -q jbang-*.zip && \
+    mv jbang-0.91.0 jbang  && \
+    rm jbang*.zip
 ENV PATH="/opt/jbang/bin:${PATH}"
 
 # Install imputation bot
