@@ -31,8 +31,8 @@ include { PREPARE_RSQ_BROWSER_DATA } from '../modules/local/prepare_rsq_browser_
 
 workflow MICROARRAY_EVAL {
 
-  strand_data   = channel.fromPath("${params.strand_data}/*strand", checkIfExists: true)
-  sequence_data = channel.fromPath("${params.sequence_data}/*vcf.gz", checkIfExists: true)
+  strand_data   = channel.fromPath("${params.strand_data}", checkIfExists: true)
+  sequence_data = channel.fromPath("${params.sequence_data}", checkIfExists: true)
 
   FILTER_SEQUENCE_DATA (sequence_data)
 
