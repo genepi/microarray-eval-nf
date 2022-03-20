@@ -28,11 +28,17 @@ include { SIMULATE_ARRAY } from '../modules/local/simulate_array'  addParams(out
 include { IMPUTE_ARRAY } from '../modules/local/impute_array' addParams(outdir: "$outdir")
 include { CALCULATE_IMPUTATION_ACCURACY } from '../modules/local/calculate_imputation_accuracy' addParams(outdir: "$outdir")
 include { PREPARE_RSQ_BROWSER_DATA } from '../modules/local/prepare_rsq_browser_data' addParams(outdir: "$outdir")
+include { CALCULATE_PGS } from '../modules/local/calculate_pgs' addParams(outdir: "$outdir")
+include { MERGE_PGS } from '../modules/local/merge_pgs' addParams(outdir: "$outdir")
+include { CALCULATE_PGS_SEQUENCE_DATA } from '../modules/local/calculate_pgs_sequence_data' addParams(outdir: "$outdir")
+include { MERGE_PGS_SEQUENCE_DATA } from '../modules/local/merge_pgs_sequence_data' addParams(outdir: "$outdir")
 
 workflow MICROARRAY_EVAL {
 
   strand_data   = channel.fromPath("${params.strand_data}/*strand", checkIfExists: true)
   sequence_data = channel.fromPath("${params.sequence_data}/*vcf.gz", checkIfExists: true)
+
+  scores = channel.fromPath("${params.scores}", checkIfExists: true)
 
   FILTER_SEQUENCE_DATA (sequence_data)
 
@@ -49,7 +55,7 @@ workflow MICROARRAY_EVAL {
   IMPUTE_ARRAY ( SIMULATE_ARRAY.out.array_data.groupTuple() )
 
 
-if(false) {
+if(true) {
   // impute gets as an input both array files + sequence files. This method combines the correct results
   r2_input_data = IMPUTE_ARRAY.out.imputed_data
     .flatMap { chipname, dose_list, sequencefile_list, chromosome_list ->
@@ -69,6 +75,24 @@ if(false) {
    CALCULATE_IMPUTATION_ACCURACY ( r2_input_data )
 
    PREPARE_RSQ_BROWSER_DATA (  CALCULATE_IMPUTATION_ACCURACY.out.r2_data_out.groupTuple() )
+
+   CALCULATE_PGS_SEQUENCE_DATA (
+     FILTER_SEQUENCE_DATA.out.sequence_data_filtered,
+     scores.collect()
+   )
+
+   MERGE_PGS_SEQUENCE_DATA (
+     CALCULATE_PGS_SEQUENCE_DATA.out.scores_chunks.groupTuple(),
+   )
+
+   CALCULATE_PGS (
+     r2_input_data,
+     scores.collect()
+   )
+
+   MERGE_PGS (
+     CALCULATE_PGS.out.scores_chunks.groupTuple(),
+   )
 
 }
 
