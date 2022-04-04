@@ -12,8 +12,11 @@ RUN conda env update -n root -f environment.yml
 
 # Install software
 RUN apt-get update && \
-    apt-get install -y procps
-
+    apt-get install -y build-essential && \
+    apt-get install -y procps && \
+    apt-get install -y libgsl-dev && \
+    apt-get install -y bcftools && \
+    apt-get install -y tabix
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install jbang (not as conda package available)
