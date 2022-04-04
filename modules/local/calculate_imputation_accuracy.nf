@@ -11,10 +11,15 @@ publishDir "${params.outdir}/aggRSquare", mode: 'copy', pattern: '*aggRSquare'
 
 
     """
-    # WORKAROUND: dosage file must be gunzip/bgzip that aggRSquare can read it (related to how MIS2 splits files with bcftools )
-    cp ${dosage_data} ${dosage_data.baseName}.tmp.vcf.gz
-    gunzip ${dosage_data.baseName}.tmp.vcf.gz
-    bgzip  ${dosage_data.baseName}.tmp.vcf
-    aggRSquare -v ${sequence_data} -i ${dosage_data.baseName}.tmp.vcf.gz -o ${array_name}_${sequence_data.baseName} --d
+    if(${params.apply_mis_fix})
+     then
+      # WORKAROUND: dosage file must be gunzip/bgzip that aggRSquare can read it (related to how MIS2 splits files with bcftools )
+      cp ${dosage_data} ${dosage_data.baseName}.tmp.vcf.gz
+      gunzip ${dosage_data.baseName}.tmp.vcf.gz
+      bgzip  ${dosage_data.baseName}.tmp.vcf
+      aggRSquare -v ${sequence_data} -i ${dosage_data.baseName}.tmp.vcf.gz -o ${array_name}_${sequence_data.baseName} --d
+    else
+      aggRSquare -v ${sequence_data} -i ${dosage_data} -o ${array_name}_${sequence_data.baseName} --d
+    fi
     """
 }
