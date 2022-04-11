@@ -7,7 +7,6 @@ publishDir "${params.outdir}/${array_name}", mode: 'copy', pattern: '*.dose.vcf.
 
     output:
     tuple val(array_name), path("*.dose.vcf.gz"), path(seq_file), val(chr), emit: imputed_data
-    val(chr), emit: test
 
     shell:
     '''

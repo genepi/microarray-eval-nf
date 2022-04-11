@@ -1,7 +1,7 @@
 
 
 requiredParams = [
-    'project', 'sequence_data',
+    'build_panel', 'build_target', 'project', 'sequence_data',
     'strand_data', 'imputation_host',
     'imputation_token', 'imputation_panel',
     'imputation_population', 'imputation_build'
@@ -26,6 +26,7 @@ if (!params.imputation_token) {
 include { FILTER_SEQUENCE_DATA } from '../modules/local/filter_sequence_data'  addParams(outdir: "$outdir")
 include { SIMULATE_ARRAY } from '../modules/local/simulate_array'  addParams(outdir: "$outdir")
 include { IMPUTE_ARRAY } from '../modules/local/impute_array' addParams(outdir: "$outdir")
+include { LIFT_OVER } from '../modules/local/lift_over' addParams(outdir: "$outdir")
 include { CALCULATE_IMPUTATION_ACCURACY } from '../modules/local/calculate_imputation_accuracy' addParams(outdir: "$outdir")
 include { PREPARE_RSQ_BROWSER_DATA } from '../modules/local/prepare_rsq_browser_data' addParams(outdir: "$outdir")
 
@@ -66,9 +67,15 @@ workflow MICROARRAY_EVAL {
           }
     }
 
+    if (params.build_panel != params.build_target) {
+
+       LIFT_OVER ( r2_input_data )
+
+    }
+
   if (params.exec_rsq_steps) {
 
-      CALCULATE_IMPUTATION_ACCURACY ( r2_input_data )
+      CALCULATE_IMPUTATION_ACCURACY ( LIFT_OVER.out.imputed_data_lifted )
 
       PREPARE_RSQ_BROWSER_DATA (  CALCULATE_IMPUTATION_ACCURACY.out.r2_data_out.groupTuple() )
   }

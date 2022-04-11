@@ -33,3 +33,11 @@ RUN wget https://github.com/lukfor/imputationbot/releases/download/v0.9.4/imputa
     rm imputationbot-0.9.4-linux.zip && \
     ./imputationbot version
 ENV PATH="/opt:${PATH}"
+
+# Install imputation
+WORKDIR "/opt/imputationserver"
+RUN wget https://github.com/genepi/imputationserver/releases/download/v1.6.6/imputationserver.zip && \
+    unzip -q imputationserver.zip  && \
+    rm imputationserver.zip
+ENV PATH="/opt/imputationserver/bin:${PATH}"
+ENV PATH="/opt/imputationserver/chains:${PATH}"
