@@ -66,9 +66,12 @@ workflow MICROARRAY_EVAL {
           }
     }
 
-   CALCULATE_IMPUTATION_ACCURACY ( r2_input_data )
+  if (params.exec_rsq_steps) {
 
-   PREPARE_RSQ_BROWSER_DATA (  CALCULATE_IMPUTATION_ACCURACY.out.r2_data_out.groupTuple() )
+      CALCULATE_IMPUTATION_ACCURACY ( r2_input_data )
+
+      PREPARE_RSQ_BROWSER_DATA (  CALCULATE_IMPUTATION_ACCURACY.out.r2_data_out.groupTuple() )
+  }
 
 }
 
