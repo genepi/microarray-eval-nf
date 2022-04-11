@@ -24,9 +24,15 @@ process SIMULATE_ARRAY {
     sort -k1b,1 -k2n,2 -o $tab_file $tab_file
 
     tabix -f !{sequence_data}
-    bcftools view -T $tab_file !{sequence_data} | bgzip -c > tmp.vcf.gz
-    bcftools annotate tmp.vcf.gz --remove FILTER | bgzip -c > $sim_file
+
+    if(!{params.remove_seq_filters})
+     then
+      bcftools view -T $tab_file !{sequence_data} -Oz -o tmp.vcf.gz
+      bcftools annotate tmp.vcf.gz --remove FILTER -Oz -o $sim_file
+      rm tmp.vcf.gz
+    else
+      bcftools view -T $tab_file !{sequence_data} -Oz -o $sim_file
+    fi
     tabix $sim_file
-    rm tmp.vcf.gz
     '''
 }
