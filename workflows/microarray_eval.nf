@@ -67,20 +67,20 @@ workflow MICROARRAY_EVAL {
           }
     }
 
-    // lift sequence data to allow comparision with aggRSquare
-     if (params.imputation_build != params.sequence_build) {
-
-       LIFT_OVER(r2_input_data)
-       r2_input_data_lifted = LIFT_OVER.out.sequence_data_lifted
-
-     } else {
-
-       r2_input_data_lifted = r2_input_data
-
-     }
-
 
   if (params.exec_rsq_steps) {
+
+    // lift sequence data to allow comparision with aggRSquare
+       if (params.imputation_build != params.sequence_build) {
+
+         LIFT_OVER(r2_input_data)
+         r2_input_data_lifted = LIFT_OVER.out.sequence_data_lifted
+
+       } else {
+
+         r2_input_data_lifted = r2_input_data
+
+       }
 
       CALCULATE_IMPUTATION_ACCURACY ( r2_input_data_lifted )
 
