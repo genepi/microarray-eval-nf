@@ -1,10 +1,11 @@
 
 
 requiredParams = [
-    'build_panel', 'build_target', 'project', 'sequence_data',
+    'project', 'sequence_data',
     'strand_data', 'imputation_host',
     'imputation_token', 'imputation_panel',
-    'imputation_population', 'imputation_build'
+    'imputation_population', 'imputation_build',
+    'sequence_build'
 ]
 
 for (param in requiredParams) {
@@ -37,12 +38,21 @@ workflow MICROARRAY_EVAL {
 
   FILTER_SEQUENCE_DATA (sequence_data)
 
-  FILTER_SEQUENCE_DATA.out.sequence_data_filtered
-  .set{sequence_data_filtered}
+  // lift sequence data to simulate chip and allow comparision with aggRSquare
+   if (params.imputation_build != params.sequence_build) {
+
+     LIFT_OVER(FILTER_SEQUENCE_DATA.out.sequence_data_filtered)
+     sequence_data_filtered_lifted = LIFT_OVER.out.sequence_data_lifted
+
+   } else {
+
+     sequence_data_filtered_lifted = FILTER_SEQUENCE_DATA.out.sequence_data_filtered
+
+   }
 
 // combine sequence data with array data
-  strand_data.combine(sequence_data_filtered)
-    .map { strand_data, sequence_data_filtered -> tuple(getChromosome(sequence_data_filtered), strand_data, sequence_data_filtered) }
+  strand_data.combine(sequence_data_filtered_lifted)
+    .map { strand_data, sequence_data_filtered_lifted -> tuple(getChromosome(sequence_data_filtered_lifted), strand_data, sequence_data_filtered_lifted) }
     .set { strand_sequence_data }
 
   SIMULATE_ARRAY ( strand_sequence_data )
@@ -67,15 +77,10 @@ workflow MICROARRAY_EVAL {
           }
     }
 
-    if (params.build_panel != params.build_target) {
-
-       LIFT_OVER ( r2_input_data )
-
-    }
 
   if (params.exec_rsq_steps) {
 
-      CALCULATE_IMPUTATION_ACCURACY ( LIFT_OVER.out.imputed_data_lifted )
+      CALCULATE_IMPUTATION_ACCURACY ( r2_input_data )
 
       PREPARE_RSQ_BROWSER_DATA (  CALCULATE_IMPUTATION_ACCURACY.out.r2_data_out.groupTuple() )
   }
