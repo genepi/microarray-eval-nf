@@ -17,7 +17,7 @@ process SIMULATE_ARRAY {
     while read -r firstCol chrCol posCol remainder
       do
         if [ "!{chr}" = "$chrCol" ]; then
-            if [ "!{params.imputation_build}" = "hg38" ]; then
+            if [ "!{params.sequence_build}" = "hg38" ]; then
               echo -e "chr!{chr}\t$posCol" >> $tab_file
             else
               echo -e "!{chr}\t$posCol" >> $tab_file

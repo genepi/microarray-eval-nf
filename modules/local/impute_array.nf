@@ -12,7 +12,7 @@ publishDir "${params.outdir}/${array_name}", mode: 'copy', pattern: '*.dose.vcf.
     '''
     pwd=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
     imputationbot add-instance !{params.imputation_host} !{params.imputation_token}
-    imputationbot impute --files !{simulated_arrays} --refpanel !{params.imputation_panel} --build !{params.imputation_build} --autoDownload --password ${pwd} --population !{params.imputation_population}
+    imputationbot impute --files !{simulated_arrays} --refpanel !{params.imputation_panel} --build !{params.sequence_build} --autoDownload --password ${pwd} --population !{params.imputation_population}
     mv job-*/local/*.dose.vcf.gz .
     rm job-*/local/*.zip
     '''
