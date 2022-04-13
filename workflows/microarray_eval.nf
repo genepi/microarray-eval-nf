@@ -4,7 +4,8 @@ requiredParams = [
     'project', 'sequence_data',
     'strand_data', 'imputation_host',
     'imputation_token', 'imputation_panel',
-    'imputation_population', 'imputation_build'
+    'imputation_population', 'imputation_build',
+    'sequence_build'
 ]
 
 for (param in requiredParams) {
@@ -26,6 +27,7 @@ if (!params.imputation_token) {
 include { FILTER_SEQUENCE_DATA } from '../modules/local/filter_sequence_data'  addParams(outdir: "$outdir")
 include { SIMULATE_ARRAY } from '../modules/local/simulate_array'  addParams(outdir: "$outdir")
 include { IMPUTE_ARRAY } from '../modules/local/impute_array' addParams(outdir: "$outdir")
+include { LIFT_OVER } from '../modules/local/lift_over' addParams(outdir: "$outdir")
 include { CALCULATE_IMPUTATION_ACCURACY } from '../modules/local/calculate_imputation_accuracy' addParams(outdir: "$outdir")
 include { PREPARE_RSQ_BROWSER_DATA } from '../modules/local/prepare_rsq_browser_data' addParams(outdir: "$outdir")
 
@@ -35,9 +37,8 @@ workflow MICROARRAY_EVAL {
   sequence_data = channel.fromPath("${params.sequence_data}", checkIfExists: true)
 
   FILTER_SEQUENCE_DATA (sequence_data)
+  sequence_data_filtered = FILTER_SEQUENCE_DATA.out.sequence_data_filtered
 
-  FILTER_SEQUENCE_DATA.out.sequence_data_filtered
-  .set{sequence_data_filtered}
 
 // combine sequence data with array data
   strand_data.combine(sequence_data_filtered)
@@ -66,9 +67,22 @@ workflow MICROARRAY_EVAL {
           }
     }
 
+
   if (params.exec_rsq_steps) {
 
-      CALCULATE_IMPUTATION_ACCURACY ( r2_input_data )
+    // lift sequence data to allow comparision with aggRSquare
+       if (params.imputation_build != params.sequence_build) {
+
+         LIFT_OVER(r2_input_data)
+         r2_input_data_lifted = LIFT_OVER.out.sequence_data_lifted
+
+       } else {
+
+         r2_input_data_lifted = r2_input_data
+
+       }
+
+      CALCULATE_IMPUTATION_ACCURACY ( r2_input_data_lifted )
 
       PREPARE_RSQ_BROWSER_DATA (  CALCULATE_IMPUTATION_ACCURACY.out.r2_data_out.groupTuple() )
   }

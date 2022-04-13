@@ -16,9 +16,13 @@ process SIMULATE_ARRAY {
 
     while read -r firstCol chrCol posCol remainder
       do
-      if [ "!{chr}" = "$chrCol" ]; then
-      echo -e "!{chr}\t$posCol" >> $tab_file
-      fi
+        if [ "!{chr}" = "$chrCol" ]; then
+            if [ "!{params.sequence_build}" = "hg38" ]; then
+              echo -e "chr!{chr}\t$posCol" >> $tab_file
+            else
+              echo -e "!{chr}\t$posCol" >> $tab_file
+            fi
+        fi
     done < !{strand_data}
 
     sort -k1b,1 -k2n,2 -o $tab_file $tab_file
