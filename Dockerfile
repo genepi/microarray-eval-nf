@@ -36,8 +36,7 @@ ENV PATH="/opt:${PATH}"
 
 # Install imputation
 WORKDIR "/opt/imputationserver"
-RUN wget https://github.com/genepi/imputationserver/releases/download/v1.6.6/imputationserver.zip && \
+RUN wget https://github.com/genepi/imputationserver/releases/download/v1.6.7/imputationserver.zip && \
     unzip -q imputationserver.zip  && \
     rm imputationserver.zip
-ENV PATH="/opt/imputationserver/bin:${PATH}"
-ENV PATH="/opt/imputationserver/chains:${PATH}"
+ENV PATH="/opt/imputationserver:${PATH}"
