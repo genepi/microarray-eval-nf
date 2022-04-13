@@ -1,6 +1,6 @@
 process CALCULATE_IMPUTATION_ACCURACY {
 
-publishDir "${params.outdir}/aggRSquare", mode: 'copy', pattern: '*aggRSquare'
+publishDir "${params.outdir}/${array_name}/aggRSquare", mode: 'copy', pattern: '*aggRSquare'
 
     input:
     tuple val(array_name), path(dosage_data), path(sequence_data), val(chr)
