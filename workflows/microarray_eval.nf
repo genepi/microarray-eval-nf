@@ -44,10 +44,17 @@ workflow MICROARRAY_EVAL {
     .map { sequence_data_filtered -> tuple(getChromosome(sequence_data_filtered), sequence_data_filtered) }
     .set { sequence_data_filtered_chromosome }
 
-  // combine sequence data with array data. TODO: use parameter to use dosages
+  // combine sequence or dosages data with array data
+  if (params.dosage_data == null){
   strand_data.combine(sequence_data_filtered)
     .map { strand_data, sequence_data_filtered -> tuple(getChromosome(sequence_data_filtered), strand_data, sequence_data_filtered) }
     .set { strand_sequence_data }
+  } else {
+    dosage_data = channel.fromPath("${params.dosage_data}", checkIfExists: true)
+    strand_data.combine(dosage_data)
+      .map { strand_data, dosage_data -> tuple(getChromosome(dosage_data), strand_data, dosage_data) }
+      .set { strand_sequence_data }
+  }
 
   SIMULATE_ARRAY ( strand_sequence_data )
 
