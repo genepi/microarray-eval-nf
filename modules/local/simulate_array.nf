@@ -6,7 +6,7 @@ process SIMULATE_ARRAY {
     tuple val(chr), path(strand_data), path(sequence_data)
 
     output:
-    tuple val(strand_data.baseName), path("*vcf.gz"), val(chr), path(sequence_data), emit: array_data
+    tuple val(strand_data.baseName), path("*vcf.gz"), val(chr), emit: array_data
 
     shell:
     '''
