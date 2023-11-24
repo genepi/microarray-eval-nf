@@ -15,14 +15,3 @@ process LIFT_OVER {
     java -jar /opt/imputationserver/imputationserver.jar vcf-liftover --input $sequence_data --output ${sequence_data.baseName}.liftover.vcf.gz --chain $chain_file
     """
 }
-~                                                                                                                                                                                                           
-~                                                                                                                                                                                                           
-~                                                                                                                                                                                                           
-~                                                                                                                                                                                                           
-~                                                                                                                                                                                                           
-~                                                                                                                                                                                                           
-~                                                                                                                                                                                                           
-~                                                                                                                                                                                                           
-~                                                                                                                                                                                                           
-~                                                                                                                                                                                                           
-~           
