@@ -12,7 +12,6 @@ process SIMULATE_ARRAY {
     def tab_file_sorted="regions.sorted.txt"
 
     """
-    cat ${strand_data}
     while read -r firstCol chrCol posCol remainder
       do
         if [ "${chr}" = "\$chrCol" ]; then
@@ -28,16 +27,16 @@ process SIMULATE_ARRAY {
 
     tabix -f ${sequence_data}
 
-    if(${params.remove_seq_filters})
+    if [[ "${params.remove_seq_filters}" = true ]]
     then
-      bcftools view -T $tab_file_sorted ${sequence_data}-Oz -o tmp.vcf.gz
+      bcftools view -T $tab_file_sorted ${sequence_data} -Oz -o tmp.vcf.gz
       bcftools annotate tmp.vcf.gz --remove FILTER -Oz -o $sim_file
       rm tmp.vcf.gz
     else
       bcftools view -T $tab_file_sorted ${sequence_data} -Oz -o $sim_file
     fi
     
-    if(${params.chip_line_selection} != 0)
+    if (( ${params.chip_line_selection} != 0 ))
     then
       bcftools view $sim_file | awk 'NR % ${params.chip_line_selection} == 0' | bgzip -c > tmp_$sim_file
       mv tmp_$sim_file $sim_file
