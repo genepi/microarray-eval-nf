@@ -3,10 +3,10 @@ process IMPUTE_ARRAY {
 publishDir "${params.outdir}/${array_name}", mode: 'copy', pattern: '*.dose.vcf.gz'
 
     input:
-    tuple val(array_name), path(simulated_arrays), val(chr), path(seq_file)
+    tuple val(array_name), path(simulated_arrays), val(chr)
 
     output:
-    tuple val(array_name), path("*.dose.vcf.gz"), path(seq_file), val(chr), emit: imputed_data
+    tuple val(array_name), path("*.dose.vcf.gz"), val(chr), emit: imputed_data
 
     shell:
     '''

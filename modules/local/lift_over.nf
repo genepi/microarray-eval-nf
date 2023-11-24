@@ -3,7 +3,7 @@ process LIFT_OVER {
 //publishDir "${params.outdir}/aggRSquare", mode: 'copy', pattern: '*aggRSquare'
 
     input:
-    tuple val(array_name), path(dosage_data), path(sequence_data), val(chr)
+    tuple val(chr), val(array_name), path(dosage_data), path(sequence_data)
 
     output:
     tuple val(array_name), path(dosage_data), path("${sequence_data.baseName}.liftover.vcf.gz"), val(chr), emit: sequence_data_lifted

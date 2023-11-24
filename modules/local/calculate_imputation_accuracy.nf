@@ -3,7 +3,7 @@ process CALCULATE_IMPUTATION_ACCURACY {
 publishDir "${params.outdir}/${array_name}/aggRSquare", mode: 'copy', pattern: '*aggRSquare'
 
     input:
-    tuple val(array_name), path(dosage_data), path(sequence_data), val(chr)
+    tuple val(chr), val(array_name), path(dosage_data), path(sequence_data)
 
     output:
     tuple val(array_name), path("*.RSquare"), emit: r2_data_out
