@@ -8,7 +8,7 @@ process SIMULATE_ARRAY {
 
     script:
     def sim_file="${strand_data.baseName}.chr${chr}.vcf.gz"
-    def tab_file="regions.txt"
+    def tab_file="vi wo gions.txt"
     def tab_file_sorted="regions.sorted.txt"
 
     """
@@ -27,6 +27,7 @@ process SIMULATE_ARRAY {
 
     tabix -f ${sequence_data}
 
+   #remove filters from input otherwise no imputation can be started for these SNPs
     if [[ "${params.remove_seq_filters}" = true ]]
     then
       bcftools view -T $tab_file_sorted ${sequence_data} -Oz -o tmp.vcf.gz
@@ -35,11 +36,14 @@ process SIMULATE_ARRAY {
     else
       bcftools view -T $tab_file_sorted ${sequence_data} -Oz -o $sim_file
     fi
-    
+
+    # select only every Xth-line from chip
     if (( ${params.chip_line_selection} != 0 ))
     then
-      bcftools view $sim_file | awk 'NR % ${params.chip_line_selection} == 0' | bgzip -c > tmp_$sim_file
-      mv tmp_$sim_file $sim_file
+      bcftools view -h $sim_file | bgzip -c > header.vcf.gz
+      bcftools view -H $sim_file | awk 'NR % ${params.chip_line_selection} == 0' | bgzip -c > tmp_$sim_file
+      cat header.vcf.gz tmp_$sim_file  > $sim_file
+      rm header.vcf.gz tmp_$sim_file 
     fi
 
     tabix $sim_file
