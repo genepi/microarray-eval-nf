@@ -8,7 +8,7 @@ process SIMULATE_ARRAY {
 
     script:
     def sim_file="${strand_data.baseName}.chr${chr}.vcf.gz"
-    def tab_file="vi wo gions.txt"
+    def tab_file="regions.txt"
     def tab_file_sorted="regions.sorted.txt"
 
     """
