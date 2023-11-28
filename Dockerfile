@@ -34,6 +34,13 @@ RUN wget https://github.com/lukfor/imputationbot/releases/download/v0.9.4/imputa
     ./imputationbot version
 ENV PATH="/opt:${PATH}"
 
+# Install imputation
+WORKDIR "/opt/imputationserver"
+RUN wget https://github.com/genepi/imputationserver/releases/download/v1.6.7/imputationserver.zip && \
+    unzip -q imputationserver.zip  && \
+    rm imputationserver.zip
+ENV PATH="/opt/imputationserver:${PATH}"
+
 # Install bcftools
 ENV BCFTOOLS_VERSION=1.13
 WORKDIR "/opt"
