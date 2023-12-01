@@ -2,6 +2,7 @@ process SIMULATE_ARRAY {
 
     input:
     tuple val(chr), path(strand_data), path(sequence_data)
+    path sample_file
 
     output:
     tuple val(strand_data.baseName), path("*vcf.gz"), val(chr), emit: array_data
@@ -44,6 +45,14 @@ process SIMULATE_ARRAY {
       bcftools view -H $sim_file | awk 'NR % ${params.chip_line_selection} == 0' | bgzip -c > tmp_$sim_file
       cat header.vcf.gz tmp_$sim_file  > $sim_file
       rm header.vcf.gz tmp_$sim_file 
+    fi
+
+
+    # select subset of samples
+    if [[ -n "${params.sample_file}" ]]
+    then
+      bcftools view -S $sample_file $sim_file | bgzip -c > tmp_$sim_file
+      mv tmp_$sim_file $sim_file
     fi
 
     tabix $sim_file

@@ -33,8 +33,14 @@ include { PREPARE_RSQ_BROWSER_DATA } from '../modules/local/prepare_rsq_browser_
 
 workflow MICROARRAY_EVAL {
 
-  strand_data   = channel.fromPath("${params.strand_data}", checkIfExists: true)
-  sequence_data = channel.fromPath("${params.sequence_data}", checkIfExists: true)
+  strand_data   = channel.fromPath(params.strand_data, checkIfExists: true)
+  sequence_data = channel.fromPath(params.sequence_data, checkIfExists: true)
+
+  def sample_file = []
+
+  if (params.sample_file != '') {
+      sample_file = file(params.sample_file, checkIfExists: true)
+  }
 
   FILTER_SEQUENCE_DATA (sequence_data)
   sequence_data_filtered = FILTER_SEQUENCE_DATA.out.sequence_data_filtered
@@ -56,7 +62,7 @@ workflow MICROARRAY_EVAL {
       .set { strand_sequence_data }
   }
 
-  SIMULATE_ARRAY ( strand_sequence_data )
+  SIMULATE_ARRAY ( strand_sequence_data, sample_file )
 
   IMPUTE_ARRAY ( SIMULATE_ARRAY.out.array_data.groupTuple() )
 
