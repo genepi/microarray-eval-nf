@@ -42,7 +42,7 @@ workflow MICROARRAY_EVAL {
       sample_file = file(params.sample_file, checkIfExists: true)
   }
 
-  FILTER_SEQUENCE_DATA (sequence_data)
+  FILTER_SEQUENCE_DATA (sequence_data, sample_file)
   sequence_data_filtered = FILTER_SEQUENCE_DATA.out.sequence_data_filtered
 
   // combine sequence data with chromosome
