@@ -4,20 +4,20 @@
     seppinho/microarray-eval-nf
 ========================================================================================
     Github : https://github.com/seppinho/microarray-eval-nf
-    Author: Sebastian Schönherr
+    Author: Sebastian Schönherr, Lukas Forer, Martin Eberle
     ---------------------------
 */
 
 nextflow.enable.dsl = 2
 
-include { MICROARRAY_EVAL } from './workflows/microarray_eval'
-include { ARRAY_SIMULATION } from './workflows/chip_simulation'
-/*
-========================================================================================
-    RUN ALL WORKFLOWS
-========================================================================================
-*/
-
-workflow {
-    MICROARRAY_EVAL ()
+switch (params.workflow_name) {
+    case 'simulate':
+        include { ARRAY_SIMULATION } from './workflows/chip_simulation'
+        workflow {
+            ARRAY_SIMULATION ()
+        }
+        break
+    default:
+        error "Unknown workflow: ${params.workflow}"
+        break
 }
