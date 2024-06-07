@@ -18,6 +18,6 @@ switch (params.workflow_name) {
         }
         break
     default:
-        error "Unknown workflow: ${params.workflow}"
+        error "Unknown workflow: ${params.workflow_name}"
         break
 }
