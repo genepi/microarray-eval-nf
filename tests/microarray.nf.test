@@ -1,0 +1,54 @@
+nextflow_pipeline {
+
+    name "Test Workflow main.nf"
+    script "workflows/chip_simulation.nf"
+    
+    test("Microarray chip simulation DNA hg19") {
+
+        when {
+            params {
+               project       = "hg19"
+               strand_data   = "$projectDir/tests/data/dna/strand_data/hg19/*strand"
+               sequence_data = "$projectDir/tests/data/dna/sequence_data/*vcf.gz"
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+    }
+
+    test("Microarray chip simulation mtDNA") {
+
+        when {
+            params {
+               project       = "mtDNA"
+               strand_data   = "$projectDir/tests/data/mtdna/strand_data/*strand"
+               sequence_data = "$projectDir/tests/data/mtdna/sequence_data/*vcf.gz"
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+    }
+
+    test("Microarray chip simulation DNA hg38") {
+
+        when {
+            params {
+               project       = "mtDNA"
+               strand_data   = "$projectDir/tests/data/dna/strand_data/hg38/*strand"
+               sequence_data = "$projectDir/tests/data/dna/sequence_data/hg38/*vcf.gz"
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+    }
+
+}

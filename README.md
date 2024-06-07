@@ -10,7 +10,11 @@ docker build -t genepi/microarray-eval:latest . # don't ignore the dot
 nextflow run main.nf -profile test --imputation_token <token>
 ```
 
-## Run Test Job
+## Run Chip Simulation
 ```
-nextflow run main.nf -profile test --imputation_token <token>
+nextflow run workflows/chip_simulation.nf -c tests/mtdna.config -profile development
 ```
+
+## Run Tests
+````
+./nf-test test
