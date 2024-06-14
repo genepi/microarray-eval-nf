@@ -1,6 +1,6 @@
 process PREPARE_RSQ_BROWSER_DATA {
 
-publishDir "${params.outdir}/${array_name}", mode: 'copy'
+publishDir "${params.pubDir}/${array_name}", mode: 'copy'
 
     input:
     tuple val(array_name), path(array)
