@@ -1,3 +1,6 @@
+[![CI Tests](https://github.com/genepi/microarray-eval-nf/actions/workflows/ci-tests.yml/badge.svg)](https://github.com/genepi/microarray-eval-nf/actions/workflows/ci-tests.yml)
+[![nf-test](https://img.shields.io/badge/tested_with-nf--test-337ab7.svg)](https://github.com/askimed/nf-test)
+
 # microarray-eval-nf
 
 A nextflow pipeline to test imputation quality of simulated microarrays.
