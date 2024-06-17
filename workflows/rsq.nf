@@ -1,5 +1,6 @@
 include { LIFT_OVER } from '../modules/local/lift_over'
 include { CALCULATE_RSQ } from '../modules/local/calculate_rsq'
+include { PLOT_RSQ } from '../modules/local/plot_rsq'
 
 workflow RSQ {
 
@@ -25,7 +26,14 @@ workflow RSQ {
         r2_input_data_lifted = r2_input_data_combined
     }
 
-    CALCULATE_RSQ ( r2_input_data_lifted )
+    CALCULATE_RSQ ( 
+        r2_input_data_lifted 
+    )
+
+    PLOT_RSQ (
+        CALCULATE_RSQ.out.agg_rsquare.collect(),
+        file("$baseDir/files/rsq-report.Rmd", checkIfExists: true)
+    )
 
 }
 
