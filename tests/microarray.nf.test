@@ -1,7 +1,7 @@
 nextflow_pipeline {
 
     name "Test Workflow main.nf"
-    script "workflows/simulation.nf"
+    script "main.nf"
     
     test("Microarray chip simulation DNA hg19") {
 
@@ -59,8 +59,8 @@ nextflow_pipeline {
         when {
             params {
                project        = "r2_calculation_hg19"
-               workflow_name = "r2"
-               strand_data    = "$projectDir/tests/data/imputed_data/hg19/*strand"
+               workflow_name  = "r2"
+               imputed_data   = "$projectDir/tests/data/imputed_data/hg19/*vcf.gz"
                sequence_data  = "$projectDir/tests/data/sequence_data/hg19/*vcf.gz"
             }
         }
