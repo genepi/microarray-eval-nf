@@ -27,7 +27,6 @@ library(dplyr)
 | Parameter        | Value                       |
 |------------------|-----------------------------|
 | Job             | `r params$name`            |
-| Pipeline Version | `r params$version`          |
 | Date             | `r params$date`             |
 
 ## RSQ Plot
@@ -48,5 +47,5 @@ ggplot() + geom_line(data = dataset_weighted, mapping = aes(x = mean_MAF, y= wei
 ```
 
 <small>
-This report has been created with **`r params$service`**.
+This report has been created with **`r params$version`**.
 </small>
