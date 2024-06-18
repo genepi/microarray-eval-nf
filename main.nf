@@ -1,23 +1,39 @@
-#!/usr/bin/env nextflow
 /*
 ========================================================================================
-    seppinho/microarray-eval-nf
+    genepi/microarray-eval-nf
 ========================================================================================
-    Github : https://github.com/seppinho/microarray-eval-nf
-    Author: Sebastian Schönherr
+    Github : https://github.com/genepi/microarray-eval-nf
+    Author: Sebastian Schönherr, Lukas Forer, Martin Eberle
     ---------------------------
 */
 
 nextflow.enable.dsl = 2
 
-include { MICROARRAY_EVAL } from './workflows/microarray_eval'
+if(params.outdir == null) {
+  params.pubDir = "output/${params.project}"
+} else {
+  params.pubDir = params.outdir
+}
 
-/*
-========================================================================================
-    RUN ALL WORKFLOWS
-========================================================================================
-*/
+include { SIMULATION } from './workflows/simulation'
+include { RSQ } from './workflows/rsq'
 
 workflow {
-    MICROARRAY_EVAL ()
+    
+    switch (params.workflow_name) {
+
+        case 'simulate':
+            SIMULATION ()
+            break
+
+        case 'r2':
+             RSQ ()
+             break
+
+        default:
+             error "Unknown workflow: ${params.workflow_name}"
+             break
+
+    }
+    
 }

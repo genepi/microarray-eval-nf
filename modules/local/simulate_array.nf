@@ -1,5 +1,7 @@
 process SIMULATE_ARRAY {
 
+    publishDir "${params.pubDir}/simulation", mode: 'copy', pattern: '*vcf.gz'
+
     input:
     tuple val(chr), path(strand_data), path(sequence_data)
     path sample_file
