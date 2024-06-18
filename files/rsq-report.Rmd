@@ -20,6 +20,7 @@ params:
 
 library(ggplot2)
 library(dplyr)
+library(knitr)
 ```
 
 ## Parameters
@@ -29,7 +30,7 @@ library(dplyr)
 | Job             | `r params$name`            |
 | Date             | `r params$date`             |
 
-## RSQ Plot
+## RSQ Table
 ```{r echo=FALSE}
 dataset = read.csv(params$input, row.names=NULL, sep = '\t')
 dataset_weighted = dataset %>%
@@ -42,8 +43,13 @@ dataset_weighted = dataset %>%
         weighted_R2 = weighted.mean(Imputation.R2,X.Variants)
     )
 
-ggplot() + geom_line(data = dataset_weighted, mapping = aes(x = mean_MAF, y= weighted_R2))  +  scale_x_log10() +  expand_limits(x = 0, y = 0) 
+kable(dataset_weighted)
+```
 
+## RSQ Plot
+
+```{r echo=FALSE}
+ggplot() + geom_line(data = dataset_weighted, mapping = aes(x = mean_MAF, y= weighted_R2))  +  scale_x_log10() +  expand_limits(x = 0, y = 0) 
 ```
 
 <small>

@@ -71,4 +71,23 @@ nextflow_pipeline {
 
     }
 
+    test("Rsq calculation for hg19/hg38") {
+
+        when {
+            params {
+               project          = "r2_calculation_hg19"
+               workflow_name    = "r2"
+               imputation_build = "hg19"
+               sequence_build   = "hg38"
+               imputed_data     = "$projectDir/tests/data/imputed_data/hg19/*vcf.gz"
+               sequence_data    = "$projectDir/tests/data/sequence_data/hg38/*vcf.gz"
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+    }
+
 }
