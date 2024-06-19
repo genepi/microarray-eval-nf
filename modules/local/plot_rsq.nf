@@ -22,7 +22,7 @@ process PLOT_RSQ {
         ),
         intermediates_dir='\$PWD',
         knit_root_dir='\$PWD',
-        output_file='\$PWD/rsq-report.html'
+        output_file='\$PWD/"${params.project}".html'
     )"
     """
 
