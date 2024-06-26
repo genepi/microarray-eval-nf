@@ -21,7 +21,7 @@ nextflow run main.nf -c tests/simulate_hg19.config -profile development
 ## Run RSQ Calculation
 This command calculates the RSQ between sequencing data and imputed data. 
 ```
-nextflow run main.nf -c tests/r2_calcuation.config -profile development
+nextflow run main.nf -c tests/calc_rsq_hg19.config -profile development
 ```
 
 ## Run Tests
