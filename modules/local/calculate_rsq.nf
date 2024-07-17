@@ -10,7 +10,14 @@ process CALCULATE_RSQ {
 
 
     """
-    aggRSquare -v ${sequence_data} -i ${dosage_data} -o ${sequence_data.baseName} --d
+    aggRSquare \
+        --validation ${sequence_data} \
+        --imputation ${dosage_data} \
+        --output ${sequence_data.baseName} \
+        --detail \
+        --imputationFormat ${params.rsq_imputation_format} \
+        --validationFormat ${params.rsq_validation_format}
+
     sed -i '/^##/d' ${sequence_data.baseName}.aggRSquare
     """
 }
